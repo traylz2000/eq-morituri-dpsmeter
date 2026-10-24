@@ -1,0 +1,80 @@
+# Builds the Windows installer on a Windows runner.
+#
+#   - Push a tag like v0.2.0: test, build, and attach the installer to a GitHub
+#     release for that tag. The tag must match package.json's version.
+#   - Actions tab > "Windows installer" > Run workflow: test and build only. The
+#     installer is attached to the run as a downloadable artifact.
+#
+# Not run on every push: Windows minutes count double against a private
+# repo's Actions quota.
+name: Windows installer
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm test
+
+      - name: Read version
+        id: version
+        shell: bash
+        run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      # A release whose tag and installer disagree breaks the in-app updater,
+      # which compares the two.
+      - name: Check tag matches package.json
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        run: |
+          if [ "${GITHUB_REF_NAME}" != "v${{ steps.version.outputs.version }}" ]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match package.json version ${{ steps.version.outputs.version }}"
+            exit 1
+          fi
+
+      # --publish never: electron-builder would otherwise try to upload on a
+      # tag build by itself. The release step below does that explicitly.
+      - name: Build installer
+        shell: bash
+        run: |
+          npm run build
+          npx electron-builder --win --config electron-builder.yml --publish never
+
+      # latest.yml and the blockmap go with the installer: the updater needs
+      # latest.yml to see a release at all, and the blockmap for its hash check.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Morituri-DPS-Meter-${{ steps.version.outputs.version }}
+          path: |
+            release/${{ steps.version.outputs.version }}/*.exe
+            release/${{ steps.version.outputs.version }}/*.exe.blockmap
+            release/${{ steps.version.outputs.version }}/latest.yml
+          if-no-files-found: error
+
+      - name: Create release
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          dir="release/${{ steps.version.outputs.version }}"
+          gh release create "${GITHUB_REF_NAME}" \
+            "$dir"/*.exe "$dir"/*.exe.blockmap "$dir/latest.yml" \
+            --title "Morituri DPS Meter ${{ steps.version.outputs.version }}" \
+            --notes "Windows installer. Windows SmartScreen will warn the first time you run it because the installer is unsigned; choose More info > Run anyway."

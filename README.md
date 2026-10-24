@@ -74,6 +74,10 @@ npm run build      # typecheck + bundle
 npm run package    # Windows installer -> release/<version>/
 ```
 
+Release builds run on GitHub Actions: push a `v<version>` tag and the
+**Windows installer** workflow attaches the installer to a release. See
+[PROJECT.md](PROJECT.md#releasing).
+
 Find what the parser misses in a real log:
 
 ```bash

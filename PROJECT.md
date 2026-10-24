@@ -66,7 +66,18 @@ injection, no memory reads, nothing written near the game folder.
       server's shield logo is NOT used. Ask the Morituri admins before adding it.
 - [ ] Hide Triune-only pages (Leaderboards, Progression, Server). PTDex lookups are already off by default
 - [ ] Update outdated Electron / electron-builder (npm audit: 28 issues)
-- [ ] Windows installer build (local cross-build or GitHub Actions)
+- [x] Windows installer build: GitHub Actions (`.github/workflows/windows-installer.yml`)
+
+## Releasing
+
+1. Bump the version: `npm version 0.2.1 --no-git-tag-version`, then commit.
+2. Tag and push: `git tag v0.2.1 && git push origin main v0.2.1`.
+3. The **Windows installer** workflow tests, builds and attaches
+   `Morituri-DPS-Meter-Setup-<version>.exe` (plus `latest.yml` and the
+   blockmap) to a GitHub release for that tag.
+
+For a test build without a release: Actions tab, **Windows installer**,
+**Run workflow**. The installer is attached to the run as an artifact.
 
 ## Development
 
