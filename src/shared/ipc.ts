@@ -24,13 +24,20 @@ import type { ZonesData } from './zones'
  * against these shapes.
  */
 
+/** A pet or companion the user has named, so its damage reaches its owner. */
+export interface Companion {
+  name: string
+  /** Which of your characters owns it. Empty means the active character. */
+  owner: string
+}
+
 /** Where the app looks for logs and how it decides a fight is over. */
 export interface Settings {
   /** `<EQ install>\Logs`. Empty until the user picks one (or auto-detect finds it). */
   logFolder: string
   /**
    * Character names whose logs we tail. On a trio server this is normally three.
-   * Empty means "every eqlog_*_multiclass.txt in the folder".
+   * Empty means "every eqlog_*_<serverShortname>.txt in the folder".
    */
   watchedCharacters: string[]
   /**
@@ -49,6 +56,13 @@ export interface Settings {
    * meaning until you say who "you" is. Empty means the first log found.
    */
   activeCharacter: string
+  /**
+   * Pets and companions named by hand. The log usually says whose a pet is,
+   * but not always before it starts fighting, and a companion the parser has
+   * not recognised is counted as a mob - its damage vanishes from the meter.
+   * These override anything learned from the log.
+   */
+  companions: Companion[]
   /** Seconds of silence that end a fight. */
   fightTimeoutSeconds: number
   /**
@@ -56,7 +70,7 @@ export interface Settings {
    * app runs entirely on its bundled data.
    */
   ptdexBase: string
-  /** Server shortname used in log filenames. Project Triune's loginserver is `multiclass`. */
+  /** Server shortname used in log filenames: `eqlog_<Char>_morituri.txt` on Project Morituri. */
   serverShortname: string
   /** The section the app was last on, so relaunching lands where you left off. */
   lastPage: string
@@ -85,11 +99,12 @@ export const DEFAULT_SETTINGS: Settings = {
   watchedCharacters: [],
   primaryCharacter: '',
   activeCharacter: '',
+  companions: [],
   fightTimeoutSeconds: 8,
-  // The PTDex deployment for Project Triune. Confirmed from the site itself:
-  // this host serves the PTDex wordmark and the Project Triune crest.
-  ptdexBase: 'https://nms.bestemu.com',
-  serverShortname: 'multiclass',
+  // Empty: PTDex is Project Triune's site and knows nothing about Morituri
+  // characters, so its lookups are off unless someone sets an address.
+  ptdexBase: '',
+  serverShortname: 'morituri',
   lastPage: 'overview',
   combatView: 'dashboard',
   // The market, because it is the tab that changes while you are looking at it.
@@ -144,9 +159,19 @@ export interface LogSource {
   group: string[]
 }
 
+/** A pet the watcher currently attributes to an owner. */
+export interface KnownPet {
+  name: string
+  owner: string
+  /** True when it came from Preferences rather than from a log line. */
+  pinned: boolean
+}
+
 export interface WatcherStatus {
   folder: string
   sources: LogSource[]
+  /** Every pet known right now, so Preferences can offer them by name. */
+  pets: KnownPet[]
   watching: boolean
   error: string | null
 }

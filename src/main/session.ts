@@ -1,4 +1,4 @@
-import type { CombatState, Settings, WatcherStatus } from '@shared/ipc'
+import type { CombatState, Companion, Settings, WatcherStatus } from '@shared/ipc'
 import type { Encounter, ParsedEvent } from '@shared/parser/types'
 import { summarize } from '@shared/stats'
 import { LogWatcher } from './watcher'
@@ -96,6 +96,10 @@ export class Session {
 
   status(): WatcherStatus {
     return this.watcher.status()
+  }
+
+  setCompanions(companions: Companion[]): WatcherStatus {
+    return this.watcher.setCompanions(companions)
   }
 
   /** Clear the session's fights - "Overall" starts from here. */

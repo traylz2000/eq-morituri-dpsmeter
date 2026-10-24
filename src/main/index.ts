@@ -255,6 +255,10 @@ function registerIpc(): void {
     // them until they were reopened. Pushed to everyone instead.
     if (patch.theme !== undefined && patch.theme !== before.theme) send('settings:theme', next.theme)
 
+    // Applied in place rather than through WATCH_KEYS: a restart re-reads the
+    // backfill and would count the session's fights twice.
+    if (patch.companions !== undefined) send('watcher:status', session.setCompanions(next.companions))
+
     return next
   })
 
@@ -502,7 +506,7 @@ function registerIpc(): void {
 }
 
 app.whenReady().then(() => {
-  app.setAppUserModelId('com.projecttriune.helper')
+  app.setAppUserModelId('com.traylz2000.morituri-dpsmeter')
   registerIpc()
   mainWindow = createMainWindow()
   // Overlays are always-on-top and have no chrome of their own, so if the main

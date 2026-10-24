@@ -168,11 +168,12 @@ export function Overview({
           <Starfield count={60} seed={7} />
           <div className="hero-inner">
             <Crest size={140} />
-            <p className="eyebrow">Project Triune</p>
-            <h1>Read your logs. See your trio.</h1>
+            <p className="eyebrow">Project Morituri</p>
+            <h1>Read your logs. See your damage.</h1>
             <p className="lede">
-              Triune-Helper tails the log files EverQuest already writes — a live meter, a fight timeline,
-              trigger alerts and progression, with nothing injected and nothing in your game folder touched.
+              Morituri DPS Meter tails the log files EverQuest already writes — a live meter, fight history,
+              your pets and companions, and trigger alerts, with nothing injected and nothing in your game
+              folder touched.
             </p>
             <div className="row" style={{ justifyContent: 'center', marginTop: 'var(--s-5)' }}>
               <button className="btn primary" type="button" onClick={onGoToPreferences}>

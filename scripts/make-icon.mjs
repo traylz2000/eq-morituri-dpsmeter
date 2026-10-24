@@ -12,9 +12,10 @@
  * here sidesteps that entirely: the format is a header, a table and a run of
  * PNGs, and Windows has read PNG-in-ICO since Vista.
  *
- *   node scripts/make-icon.mjs
+ *   node scripts/make-icon.mjs [--ozone-platform=headless]
  */
 import { spawn } from 'node:child_process'
+import { createRequire } from 'node:module'
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -31,24 +32,18 @@ mkdirSync(dirname(out), { recursive: true })
 const SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="1024" height="1024">
   <defs>
     <radialGradient id="plate" cx="50%" cy="38%" r="72%">
-      <stop offset="0" stop-color="#16202e"/><stop offset="1" stop-color="#070a10"/>
+      <stop offset="0" stop-color="#231d14"/><stop offset="1" stop-color="#0a0806"/>
     </radialGradient>
-    <radialGradient id="halo"><stop offset=".52" stop-color="#3474be" stop-opacity="0"/>
-      <stop offset=".72" stop-color="#8fd0ff" stop-opacity=".30"/>
-      <stop offset="1" stop-color="#8fd0ff" stop-opacity="0"/></radialGradient>
-    <radialGradient id="n1"><stop offset="0" stop-color="#2892d8" stop-opacity=".75"/>
-      <stop offset="1" stop-color="#2892d8" stop-opacity="0"/></radialGradient>
-    <radialGradient id="n2"><stop offset="0" stop-color="#f0621f" stop-opacity=".75"/>
-      <stop offset="1" stop-color="#f0621f" stop-opacity="0"/></radialGradient>
-    <radialGradient id="n3"><stop offset="0" stop-color="#1fa878" stop-opacity=".75"/>
-      <stop offset="1" stop-color="#1fa878" stop-opacity="0"/></radialGradient>
+    <radialGradient id="halo"><stop offset=".52" stop-color="#8a6a2a" stop-opacity="0"/>
+      <stop offset=".72" stop-color="#d8b45a" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#d8b45a" stop-opacity="0"/></radialGradient>
   </defs>
 
   <rect x="4" y="4" width="192" height="192" rx="42" fill="url(#plate)"/>
   <circle cx="100" cy="100" r="92" fill="url(#halo)"/>
-  <circle cx="100" cy="100" r="61.4" fill="#080f1c" fill-opacity=".9"/>
+  <circle cx="100" cy="100" r="61.4" fill="#0d0b08" fill-opacity=".9"/>
 
-  <g stroke="#8fd0ff" stroke-linecap="round">
+  <g stroke="#d8b45a" stroke-linecap="round">
     ${[
       [149.6, 100.0, 161.4, 100.0, 1],
       [147.3, 127.3, 153.2, 130.7, 0],
@@ -70,24 +65,16 @@ const SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width
       .join('\n    ')}
   </g>
 
-  <circle cx="100" cy="100" r="61.4" fill="none" stroke="#8fd0ff" stroke-opacity=".9" stroke-width="2.2"/>
-  <circle cx="100" cy="100" r="45.9" fill="none" stroke="#8fd0ff" stroke-opacity=".3" stroke-width="1.6"/>
+  <circle cx="100" cy="100" r="61.4" fill="none" stroke="#d8b45a" stroke-opacity=".9" stroke-width="2.2"/>
 
-  <polygon points="100,62.8 132.2,118.6 67.8,118.6" fill="#5a82c8" fill-opacity=".12"/>
-  <polygon points="100,62.8 132.2,118.6 67.8,118.6" fill="none" stroke="#8fa5eb"
-           stroke-opacity=".8" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M73.13 126.87 A38 38 0 1 1 126.87 126.87" fill="none" stroke="#d8b45a" stroke-opacity=".55"
+        stroke-width="6" stroke-linecap="round"/>
+  <path d="M126.87 73.13 A38 38 0 0 1 126.87 126.87" fill="none" stroke="#f0621f" stroke-width="6"
+        stroke-linecap="round"/>
 
-  <circle cx="100" cy="62.8" r="22" fill="url(#n1)"/>
-  <circle cx="100" cy="62.8" r="7.5" fill="#2892d8"/>
-  <circle cx="98" cy="60.8" r="2.6" fill="#fff" fill-opacity=".85"/>
-
-  <circle cx="132.2" cy="118.6" r="22" fill="url(#n2)"/>
-  <circle cx="132.2" cy="118.6" r="7.5" fill="#f0621f"/>
-  <circle cx="130.2" cy="116.6" r="2.6" fill="#fff" fill-opacity=".85"/>
-
-  <circle cx="67.8" cy="118.6" r="22" fill="url(#n3)"/>
-  <circle cx="67.8" cy="118.6" r="7.5" fill="#1fa878"/>
-  <circle cx="65.8" cy="116.6" r="2.6" fill="#fff" fill-opacity=".85"/>
+  <line x1="96" y1="106.93" x2="117" y2="70.56" stroke="#f0621f" stroke-width="4.2" stroke-linecap="round"/>
+  <circle cx="100" cy="100" r="7.5" fill="#d8b45a"/>
+  <circle cx="98" cy="98" r="2.6" fill="#fff" fill-opacity=".8"/>
 </svg>`
 
 // overflow:hidden matters: without it the transparent window renders its
@@ -170,8 +157,11 @@ writeFileSync(tmp, MAIN)
 const env = { ...process.env }
 delete env.ELECTRON_RUN_AS_NODE
 
-const electron = join(root, 'node_modules', 'electron', 'dist', 'electron.exe')
-const child = spawn(electron, [tmp], { env })
+// The electron package's main export is the path to its binary, on any OS.
+// Extra arguments pass through - on a machine with no display, add
+// --ozone-platform=headless.
+const electron = createRequire(import.meta.url)('electron')
+const child = spawn(electron, [tmp, ...process.argv.slice(2)], { env })
 
 let buffer = ''
 child.stdout.on('data', (d) => {

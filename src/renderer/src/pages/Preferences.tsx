@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import type { HistoryResult, Settings, WatcherStatus } from '@shared/ipc'
+import type { Companion, HistoryResult, Settings, WatcherStatus } from '@shared/ipc'
 import { DEFAULT_THEME, THEMES } from '@shared/themes'
 import { hasUpdate, type UpdateStatus } from '@shared/update'
 import { genderOf, resolveVoice, VOICE_PERSONAS, type AvailableVoice } from '@shared/voices'
@@ -89,7 +89,7 @@ export function Preferences({
               <input
                 type="text"
                 value={settings.logFolder}
-                placeholder="C:\ProjectTriune\Logs"
+                placeholder="C:\EverQuest\Logs"
                 onChange={(e) => void update({ logFolder: e.target.value })}
                 style={{ flex: 1 }}
               />
@@ -101,7 +101,7 @@ export function Preferences({
               </button>
             </div>
             <span className="fhint">
-              Read-only. Triune-Helper never writes into your game directory. Turn logging on in-game with{' '}
+              Read-only. This app never writes into your game directory. Turn logging on in-game with{' '}
               <code>/log on</code>.
             </span>
             {detectMsg && <span className="err">{detectMsg}</span>}
@@ -141,6 +141,8 @@ export function Preferences({
           </label>
         </div>
       </section>
+
+      <Companions settings={settings} update={update} status={status} />
 
       <section className="panel">
         <div className="phead">
@@ -434,6 +436,128 @@ export function Preferences({
         </div>
       </section>
     </div>
+  )
+}
+
+/**
+ * Pets and companions, named by hand.
+ *
+ * The log usually gives a pet's owner away, but not always, and not always
+ * before the first fight. A companion the parser has not recognised is counted
+ * as a mob and its damage disappears, so this is the way to make sure. Names
+ * the log has already revealed are offered in the dropdown and can be pinned
+ * in one click.
+ */
+function Companions({
+  settings,
+  update,
+  status
+}: {
+  settings: Settings
+  update: (patch: Partial<Settings>) => Promise<void>
+  status: WatcherStatus | null
+}): JSX.Element {
+  const list = settings.companions
+  const listed = new Set(list.map((c) => c.name.trim()))
+  const detected = (status?.pets ?? []).filter((p) => !p.pinned && !listed.has(p.name))
+  const characters = (status?.sources ?? []).map((s) => s.character)
+
+  // Detected pets first, then group members - a companion often shows up in
+  // the group list before it has said anything that identifies its owner.
+  const suggestions = [
+    ...new Set([
+      ...detected.map((p) => p.name),
+      ...(status?.sources ?? []).flatMap((s) => s.group)
+    ])
+  ].filter((n) => !listed.has(n) && !characters.includes(n))
+
+  const save = (next: Companion[]): void => void update({ companions: next })
+  const change = (i: number, patch: Partial<Companion>): void =>
+    save(list.map((c, j) => (j === i ? { ...c, ...patch } : c)))
+
+  return (
+    <section className="panel">
+      <div className="phead">
+        <span className="t">Pets &amp; companions</span>
+        <span className="meta">{list.length} named</span>
+      </div>
+      <div className="pbody form">
+        <datalist id="pet-suggestions">
+          {suggestions.map((n) => (
+            <option key={n} value={n} />
+          ))}
+        </datalist>
+
+        {list.map((c, i) => (
+          <div className="field row" key={i}>
+            <input
+              type="text"
+              list="pet-suggestions"
+              value={c.name}
+              placeholder="Pet or companion name"
+              aria-label="Pet or companion name"
+              onChange={(e) => change(i, { name: e.target.value })}
+              style={{ flex: 1 }}
+            />
+            <span className="muted">belongs to</span>
+            <select
+              value={c.owner}
+              aria-label={`Owner of ${c.name || 'this pet'}`}
+              onChange={(e) => change(i, { owner: e.target.value })}
+            >
+              <option value="">Active character</option>
+              {/* Keep an owner whose log is not open right now selectable,
+                  rather than silently showing it as something else. */}
+              {[...new Set([...characters, ...(c.owner ? [c.owner] : [])])].map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+            <button
+              className="chipbtn x"
+              type="button"
+              aria-label={`Remove ${c.name || 'this pet'}`}
+              onClick={() => save(list.filter((_, j) => j !== i))}
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+
+        <div className="field row">
+          <button className="btn" type="button" onClick={() => save([...list, { name: '', owner: '' }])}>
+            Add a pet
+          </button>
+        </div>
+
+        {detected.length > 0 && (
+          <div className="field">
+            <span className="flabel">Detected in your logs</span>
+            <div className="row" style={{ flexWrap: 'wrap' }}>
+              {detected.map((p) => (
+                <button
+                  key={p.name}
+                  className="chipbtn"
+                  type="button"
+                  title="Pin this pet so its owner never changes"
+                  onClick={() => save([...list, { name: p.name, owner: p.owner }])}
+                >
+                  + {p.name} <span className="muted">({p.owner})</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <span className="fhint">
+          Type a name or pick one from the dropdown. A named pet&apos;s damage is always credited to the
+          owner you choose here, whatever the log says. Pets the log identifies on its own are listed under
+          &ldquo;Detected&rdquo; and are already counted; pin one if it ever lands in the wrong row. Other
+          players are not pets — leave them out.
+        </span>
+      </div>
+    </section>
   )
 }
 

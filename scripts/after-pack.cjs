@@ -56,12 +56,12 @@ exports.default = async function afterPack(context) {
       '--set-icon', icon,
       '--set-file-version', version,
       '--set-product-version', version,
-      '--set-version-string', 'ProductName', 'Triune-Helper',
-      '--set-version-string', 'FileDescription', 'Triune-Helper',
-      '--set-version-string', 'CompanyName', 'Project Triune',
-      '--set-version-string', 'LegalCopyright', 'Project Triune',
-      '--set-version-string', 'OriginalFilename', 'Triune-Helper.exe',
-      '--set-version-string', 'InternalName', 'Triune-Helper'
+      '--set-version-string', 'ProductName', 'Morituri DPS Meter',
+      '--set-version-string', 'FileDescription', 'Morituri DPS Meter',
+      '--set-version-string', 'CompanyName', 'traylz2000',
+      '--set-version-string', 'LegalCopyright', 'traylz2000, and Project Triune (Triune-Helper), MIT',
+      '--set-version-string', 'OriginalFilename', 'Morituri DPS Meter.exe',
+      '--set-version-string', 'InternalName', 'Morituri DPS Meter'
     ],
     { stdio: 'inherit' }
   )

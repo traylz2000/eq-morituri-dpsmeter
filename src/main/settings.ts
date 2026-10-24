@@ -30,8 +30,10 @@ export function setSettings(patch: Partial<Settings>): Settings {
  * from the Logs subfolder - the app never writes into the game directory.
  */
 const CANDIDATE_ROOTS = [
-  'C:\\ProjectTriune',
-  'C:\\Triune',
+  // Guesses at where a Morituri client lives, until someone confirms one.
+  'C:\\Morituri',
+  'C:\\ProjectMorituri',
+  'C:\\Project Morituri',
   'C:\\EverQuest',
   'C:\\Program Files (x86)\\Sony\\EverQuest',
   'C:\\Program Files\\Sony\\EverQuest',

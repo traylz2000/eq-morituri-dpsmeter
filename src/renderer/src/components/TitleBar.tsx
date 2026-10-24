@@ -110,8 +110,8 @@ export function TitleBar({
       <div className="brand">
         <Crest size={32} />
         <span className="wordmark">
-          Triune-Helper
-          <small>Project Triune</small>
+          Morituri DPS Meter
+          <small>Project Morituri</small>
         </span>
       </div>
 

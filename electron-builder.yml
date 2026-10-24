@@ -1,6 +1,6 @@
-appId: com.projecttriune.helper
-productName: Triune-Helper
-copyright: Project Triune
+appId: com.traylz2000.morituri-dpsmeter
+productName: Morituri DPS Meter
+copyright: traylz2000, and Project Triune (Triune-Helper)
 
 directories:
   buildResources: build
@@ -76,8 +76,8 @@ nsis:
   runAfterFinish: true
   createDesktopShortcut: true
   createStartMenuShortcut: true
-  shortcutName: Triune-Helper
-  artifactName: Triune-Helper-Setup-${version}.${ext}
+  shortcutName: Morituri DPS Meter
+  artifactName: Morituri-DPS-Meter-Setup-${version}.${ext}
   # Leave the user's settings, alert rules and flag progress behind on
   # uninstall - a reinstall should not silently wipe someone's rules.
   deleteAppDataOnUninstall: false
@@ -95,5 +95,5 @@ nsis:
 # is invisible to the updater, and the app will sit there saying it is current.
 publish:
   provider: github
-  owner: Aoezpz
-  repo: Triune-Helper
+  owner: traylz2000
+  repo: eq-morituri-dpsmeter

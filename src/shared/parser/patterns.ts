@@ -66,6 +66,11 @@ export interface ParseContext {
   /** Pet name -> owner. Learned from pet-leader lines and `/pet` messages. */
   petOwners: Map<string, string>
   /**
+   * Pets the user named in Preferences. Their owner is a decision, not a
+   * guess, so nothing a log line says may overwrite it - see `learnPet`.
+   */
+  pinnedPets?: ReadonlySet<string>
+  /**
    * Names known to be players: the characters being boxed, plus anyone seen in
    * a /who. Shared across logs, and the reason mob detection can default the
    * other way - see `actor`.
@@ -78,6 +83,20 @@ function isSelfWord(name: string): boolean {
   const n = name.toLowerCase()
   return n === 'you' || n === 'your' || n === 'yourself'
 }
+
+/** Record a pet's owner, unless the user has already said whose it is. */
+export function learnPet(ctx: ParseContext, pet: string, owner: string): void {
+  if (ctx.pinnedPets?.has(pet)) return
+  ctx.petOwners.set(pet, isSelfWord(owner) ? ctx.self : owner)
+}
+
+/**
+ * Project Morituri tags a companion's spell damage with its owner:
+ * "Rustik (Owner: Teguus) hit a flame lordling for 812 points of non-melee
+ * damage. (Valorous Strike)". The tag is the most reliable ownership signal in
+ * the log, and left in place it made "Rustik (Owner: Teguus)" a mob of its own.
+ */
+const OWNER_TAG = /^(.+?) \(Owner: (.+?)\)$/
 
 /**
  * "herself", "itself" - a target that means "whoever did it".
@@ -104,6 +123,12 @@ const REFLEXIVE = new Set(['himself', 'herself', 'itself', 'themselves', 'themse
  */
 function actor(name: string, ctx: ParseContext): Actor {
   if (isSelfWord(name)) return { name: ctx.self, kind: 'self' }
+
+  const tagged = OWNER_TAG.exec(name)
+  if (tagged) {
+    learnPet(ctx, tagged[1], tagged[2])
+    name = tagged[1]
+  }
 
   // A log naming its own character IS the first person, whatever grammar the
   // line happens to use. Project Triune writes melee in the second person ("You
@@ -498,8 +523,19 @@ const RULES: Rule[] = [
   {
     re: /^(.+?) says,? ['"]My leader is (.+?)\.?['"]$/,
     build: (m, line, ctx) => {
-      ctx.petOwners.set(m[1], isSelfWord(m[2]) ? ctx.self : m[2])
+      learnPet(ctx, m[1], m[2])
       return { ...base(line, 'chat'), attacker: { name: m[1], kind: 'pet', owner: m[2] } }
+    }
+  },
+  // Project Morituri companions never state a leader. They answer the log's
+  // owner as "Master" instead - "Rustik tells you, 'Attacking a flame lordling
+  // Master.'" and "Rustik says 'Taunting attacker, Master.'" - and only a
+  // companion of THIS log's character talks to it that way.
+  {
+    re: /^(.+?) (?:tells you|says),? ['"](?:Attacking .+|Taunting attacker,) Master\.['"]$/,
+    build: (m, line, ctx) => {
+      learnPet(ctx, m[1], ctx.self)
+      return { ...base(line, 'chat'), attacker: { name: m[1], kind: 'pet', owner: ctx.self } }
     }
   },
 

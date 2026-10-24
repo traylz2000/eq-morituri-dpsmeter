@@ -176,7 +176,7 @@ export class Updates {
       const json = await request(RELEASES_API, undefined, {
         Accept: 'application/vnd.github+json',
         // GitHub rejects API requests with no user agent.
-        'User-Agent': `Triune-Helper/${this.current}`
+        'User-Agent': `eq-morituri-dpsmeter/${this.current}`
       })
       const release = readRelease(json)
 

@@ -109,9 +109,17 @@ export async function rebuildHistory(
   // Shared across every log, exactly as the live watcher shares them: a pet
   // learned in one file is a pet in all of them.
   const petOwners = new Map<string, string>()
+  const pinnedPets = new Set<string>()
+  const fallback = settings.activeCharacter || files[0].character
+  for (const c of settings.companions) {
+    const name = c.name.trim()
+    if (!name) continue
+    pinnedPets.add(name)
+    petOwners.set(name, c.owner.trim() || fallback)
+  }
   const players = new Set<string>(files.map((f) => f.character))
   const contexts = new Map<string, ParseContext>(
-    files.map((f) => [f.character, { self: f.character, petOwners, players }])
+    files.map((f) => [f.character, { self: f.character, petOwners, pinnedPets, players }])
   )
 
   const truncated: string[] = []

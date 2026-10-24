@@ -23,7 +23,7 @@ export const THEMES: ThemeDef[] = [
   {
     id: 'voidforge',
     name: 'Voidforge',
-    note: 'Near-black ground, weathered gold. Matches PTDex.',
+    note: 'Near-black ground, weathered gold.',
     swatch: ['#0a0c14', '#ff8a4a', '#5aa0e0']
   },
   {

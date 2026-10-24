@@ -1,9 +1,9 @@
 {
-  "name": "triune-helper",
+  "name": "eq-morituri-dpsmeter",
   "version": "0.1.10",
-  "description": "Project Triune combat companion - live DPS meter, fight timeline, alerts and progression, read from your EverQuest logs.",
+  "description": "DPS meter and combat history for the Project Morituri EverQuest server, read from your EverQuest logs. Forked from Triune-Helper.",
   "main": "./out/main/index.js",
-  "author": "Project Triune",
+  "author": "traylz2000",
   "license": "MIT",
   "private": true,
   "scripts": {

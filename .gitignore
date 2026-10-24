@@ -6,3 +6,9 @@ release/
 .vite/
 .DS_Store
 tsconfig.*.tsbuildinfo
+
+# Personal game logs used for local testing - contain other players chat
+testdata/
+
+# Local Claude Code notes
+CLAUDE.md

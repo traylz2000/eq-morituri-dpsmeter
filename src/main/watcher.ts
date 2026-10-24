@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
-import { isLive, type LogSource, type Settings, type WatcherStatus } from '@shared/ipc'
+import { isLive, type Companion, type LogSource, type Settings, type WatcherStatus } from '@shared/ipc'
 import { EncounterTracker } from '@shared/parser/encounter'
 import { mergeEvents, type MergeConfig } from '@shared/parser/merge'
 import { parseLine, type ParseContext } from '@shared/parser/patterns'
@@ -64,6 +64,10 @@ function isStandingFact(line: string): boolean {
     line.includes('group') ||
     line.includes('party') ||
     line.includes('My leader is') ||
+    // Morituri companions: "Rustik tells you, 'Attacking a gnoll Master.'",
+    // and the owner tag on their spell damage, "Rustik (Owner: Teguus) hit".
+    line.includes('Master.') ||
+    line.includes('(Owner: ') ||
     // A world blessing is a standing fact in exactly the same sense: announced
     // once, true for the next several hours, and never repeated. It is also
     // the one the 64 KB attach backfill is worst at - the announcement can be
@@ -112,6 +116,9 @@ export class LogWatcher {
 
   /** Pet ownership is shared across all logs: whoever learns it, all benefit. */
   private petOwners = new Map<string, string>()
+
+  /** Pets named in Preferences. Shared with every log's parse context. */
+  private pinnedPets = new Set<string>()
 
   /**
    * Names known to be players, shared across logs. Seeded with the characters
@@ -167,6 +174,10 @@ export class LogWatcher {
     }
 
     this.discover()
+    // After discover, so an empty owner can resolve to a log that exists - and
+    // before any of the standing-fact scans it started can finish, so a log
+    // line never gets the chance to overrule a name the user pinned.
+    this.applyCompanions(settings.companions)
     this.timer = setInterval(() => void this.poll(), POLL_MS)
     // New characters appear when someone logs in a third box mid-session.
     this.rescanTimer = setInterval(() => this.discover(), 5000)
@@ -184,6 +195,34 @@ export class LogWatcher {
     this.groups.clear()
     this.chosenPrimary = null
     this.tracker = null
+  }
+
+  /**
+   * Apply the Preferences pet list without restarting.
+   *
+   * A restart would re-read every log's backfill and count those fights a
+   * second time, which is a steep price for renaming a pet.
+   */
+  setCompanions(companions: Companion[]): WatcherStatus {
+    if (this.settings) this.settings = { ...this.settings, companions }
+    this.applyCompanions(companions)
+    return this.status()
+  }
+
+  private applyCompanions(companions: Companion[]): void {
+    // An unpinned name goes back to whatever the log says about it, which may
+    // be nothing - then it is a mob again until the log names its owner.
+    for (const name of this.pinnedPets) this.petOwners.delete(name)
+    this.pinnedPets.clear()
+
+    const fallback = this.settings?.activeCharacter || [...this.tails.keys()].sort()[0] || ''
+    for (const c of companions) {
+      const name = c.name.trim()
+      const owner = c.owner.trim() || fallback
+      if (!name || !owner) continue
+      this.pinnedPets.add(name)
+      this.petOwners.set(name, owner)
+    }
   }
 
   /**
@@ -221,7 +260,11 @@ export class LogWatcher {
       }))
       .sort((a, b) => a.character.localeCompare(b.character))
 
-    return { folder: this.folder, sources, watching: this.timer !== null, error: this.error }
+    const pets = [...this.petOwners]
+      .map(([name, owner]) => ({ name, owner, pinned: this.pinnedPets.has(name) }))
+      .sort((a, b) => a.name.localeCompare(b.name))
+
+    return { folder: this.folder, sources, pets, watching: this.timer !== null, error: this.error }
   }
 
   /**
@@ -312,6 +355,7 @@ export class LogWatcher {
       const ctx: ParseContext = {
         self: character,
         petOwners: this.petOwners,
+        pinnedPets: this.pinnedPets,
         players: this.players
       }
       this.tails.set(character, {
@@ -429,7 +473,8 @@ export class LogWatcher {
         if (ev.kind === 'blessing') standing.push(ev)
       }
       if (standing.length > 0) this.events.onStandingFacts?.(standing)
-      if (this.groups.get(character)?.size) this.events.onStatus(this.status())
+      // Pets ride on the status too: Preferences offers them by name.
+      if (this.groups.get(character)?.size || this.petOwners.size) this.events.onStatus(this.status())
     } catch {
       // Unreadable is not fatal - pets simply stay unattributed and the group
       // reads empty until the next join, which the tail will see live.
@@ -445,6 +490,7 @@ export class LogWatcher {
   private async poll(): Promise<void> {
     const batch: ParsedEvent[] = []
     let groupsChanged = false
+    const petsBefore = this.petOwners.size
 
     for (const tail of this.tails.values()) {
       if (tail.reading) continue
@@ -510,7 +556,7 @@ export class LogWatcher {
 
     // The group roster rides on `watcher:status`, which is already pushed for
     // other reasons - so a join only costs a status push, not a new channel.
-    if (groupsChanged) this.events.onStatus(this.status())
+    if (groupsChanged || this.petOwners.size !== petsBefore) this.events.onStatus(this.status())
 
     if (batch.length === 0) {
       this.tracker?.tick(Date.now())

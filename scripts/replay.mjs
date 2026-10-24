@@ -20,7 +20,7 @@ for (let i = 2; i < process.argv.length; i += 2) {
 }
 
 const OUT = args.get('out') ?? join(process.cwd(), '.replay-logs')
-const SERVER = args.get('server') ?? 'multiclass'
+const SERVER = args.get('server') ?? 'morituri'
 const SPEED = Number(args.get('speed') ?? 1)
 const MAX_FIGHTS = Number(args.get('fights') ?? Infinity)
 

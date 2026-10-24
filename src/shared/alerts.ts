@@ -187,7 +187,7 @@ export function exportRules(rules: AlertRule[]): string {
 export function importRules(text: string): AlertRule[] {
   const trimmed = text.trim()
   if (!trimmed.startsWith(PREFIX)) {
-    throw new Error(`Not a Triune alert string - it should start with ${PREFIX}`)
+    throw new Error(`Not an alert string - it should start with ${PREFIX}`)
   }
   const b64 = trimmed.slice(PREFIX.length).replace(/-/g, '+').replace(/_/g, '/')
   const json = atobUtf8(b64 + '='.repeat((4 - (b64.length % 4)) % 4))
