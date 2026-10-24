@@ -1,6 +1,6 @@
 {
   "name": "eq-morituri-dpsmeter",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "DPS meter and combat history for the Project Morituri EverQuest server, read from your EverQuest logs. Forked from Triune-Helper.",
   "main": "./out/main/index.js",
   "author": "traylz2000",
