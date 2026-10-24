@@ -429,8 +429,9 @@ export function Preferences({
               onChange={(e) => void update({ ptdexBase: e.target.value.trim() })}
             />
             <span className="fhint">
-              Optional. Fills item and spell tooltips from the website. Leave blank and the app runs entirely
-              on its bundled data.
+              PTDex is Project Triune&apos;s site and has no Morituri data, so this is blank by default. When
+              set, it fills item and spell tooltips and party class lines from that site. Blank, the app makes
+              no network requests except the optional update check.
             </span>
           </label>
         </div>

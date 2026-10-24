@@ -48,11 +48,13 @@ always credited to that owner, whatever the log says.
 | **History** | Past fights, plus lifetime ledgers for **Zones**, **Mobs**, **Loot** and **Leveling**. **Rebuild from logs** in Preferences replays every `eqlog` on disk, so old logs count too. |
 | **Alerts** | Rules over log lines with sounds and speech. |
 | **Timers** | Countdowns you set, plus respawn windows worked out from gaps between your own kills. |
+| **Server** | What the server broadcasts while you are logged in: first logins, world blessings and auction chat. |
 | **Overlays** | Always-on-top meter and stream windows. They open **locked** (click-through), so a stray click lands on the game. Overlays need borderless windowed mode, not exclusive fullscreen. |
 
-**Leaderboards**, **Progression** and **Server** came from Triune-Helper and
-read Project Triune's PTDex site. They do not apply to Morituri yet, and their
-network lookups are off by default.
+Triune-Helper's **Progression** and **Leaderboards** pages read Project
+Triune's PTDex site, which has no Morituri data, so they are not in the menu.
+PTDex tooltips and party class lookups are off unless an address is set in
+Preferences.
 
 ### Boxing several characters
 

@@ -8,8 +8,6 @@ import {
   IconMobs,
   IconOverview,
   IconPrefs,
-  IconProgression,
-  IconRaid,
   IconServer,
   IconTimers
 } from './Icons'
@@ -17,8 +15,6 @@ import {
 export type PageId =
   | 'overview'
   | 'combat'
-  | 'progression'
-  | 'leaderboards'
   | 'alerts'
   | 'leveling'
   | 'loot'
@@ -42,6 +38,11 @@ type Item = {
  * than about you - was last because it was written last. Four short groups is
  * enough structure to make the list scannable without turning the nav into a
  * menu tree.
+ *
+ * Progression and Leaderboards are not listed: both read Project Triune's
+ * PTDex site, which knows nothing about Project Morituri. Their pages are
+ * still in the source (pages/Progression.tsx, pages/Leaderboards.tsx) should
+ * Morituri ever publish the same data.
  */
 const GROUPS: { title: string; items: Item[] }[] = [
   {
@@ -54,18 +55,11 @@ const GROUPS: { title: string; items: Item[] }[] = [
     ]
   },
   {
-    // How the character is coming along, soonest-changing first.
-    title: 'Progress',
-    items: [
-      { id: 'leveling', label: 'Leveling', icon: IconLeveling },
-      { id: 'progression', label: 'Progression', icon: IconProgression },
-      { id: 'leaderboards', label: 'Leaderboards', icon: IconRaid }
-    ]
-  },
-  {
-    // Lifetime totals, read after the fact: where, what, and what it dropped.
+    // Lifetime totals, read after the fact: how far, where, what, and what it
+    // dropped.
     title: 'Ledgers',
     items: [
+      { id: 'leveling', label: 'Leveling', icon: IconLeveling },
       { id: 'zones', label: 'Zones', icon: IconMaps },
       { id: 'mobs', label: 'Mobs', icon: IconMobs },
       { id: 'loot', label: 'Loot', icon: IconLoot }

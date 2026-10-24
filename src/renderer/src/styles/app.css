@@ -724,13 +724,10 @@ code {
 /* ---- overview --------------------------------------------------------------
    The tiles are buttons: every headline number on this page is a shortcut to
    the page that explains it. */
-.ov > .panel, .ov > .loot-splits, .ov > .loot-hero, .ov > .ov-cols { flex: none; }
+.ov > .panel, .ov > .loot-splits, .ov > .loot-hero { flex: none; }
 .ovtile { text-align: left; cursor: pointer; font: inherit; }
 .ovtile:hover { border-color: var(--gold-deep); }
 .ovtile .v { font-size: 1.4rem; }
-
-.ov-cols { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: var(--s-3); }
-@media (max-width: 71.875em) { .ov-cols { grid-template-columns: 1fr; } }
 
 .ovchars { display: flex; flex-direction: column; gap: 0.375rem; }
 .ovchar { display: flex; align-items: center; gap: var(--s-2); min-width: 0; flex-wrap: wrap; }
@@ -762,24 +759,6 @@ code {
   margin-top: 0.2rem;
 }
 .ovchar.apart { opacity: 0.6; }
-
-.ovflags {
-  appearance: none;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-.ovflags .of-pct { font-size: 1.6rem; font-weight: 800; color: var(--gold-hi); line-height: 1; }
-.ovflags .of-bar { height: 0.3rem; border-radius: var(--r-pill); background: rgba(6, 7, 12, 0.6); overflow: hidden; }
-.ovflags .of-bar i { display: block; height: 100%; background: var(--gold); border-radius: var(--r-pill); }
-.ovflags .of-sub { font-size: 0.7rem; color: var(--muted); }
 
 /* ---- zones -----------------------------------------------------------------
    A table, because eight comparable numbers per row is what a table is for.

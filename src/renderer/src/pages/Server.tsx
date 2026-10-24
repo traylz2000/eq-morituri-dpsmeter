@@ -444,7 +444,7 @@ export function Server({
             wanted — a <code>list</code> row named no WTS/WTB/WTT, so it is shown word for word rather than
             turned into a price list nobody offered. Even then the names are only lifted when they carry a
             tier in brackets, and sellers who run several together without punctuation will have two merge
-            into one — hover a name to check it against PTDex, which is how you spot those. Most lines carry
+            into one, so a name may need a second look. Most lines carry
             no price at all, and <code>/bazaar</code> trader stock never reaches the log. Hover any row to
             read the line exactly as it was said.
           </p>

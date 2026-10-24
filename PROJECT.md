@@ -25,7 +25,7 @@ injection, no memory reads, nothing written near the game folder.
 |---|---|---|
 | Log filename | `eqlog_<Char>_multiclass.txt` | `eqlog_<Char>_morituri.txt` |
 | Install paths | `C:\ProjectTriune`, `C:\Triune`, … | Guessed: `C:\Morituri`, `C:\ProjectMorituri`, … (unconfirmed) |
-| Leaderboards / progression | Scraped from PTDex | No PTDex — not applicable |
+| Leaderboards / progression | Scraped from PTDex | No PTDex — pages hidden |
 | Companions | — | Players command companions (`#petcmd attack all`); companions answer "Attacking X Master." |
 
 ## Log findings (sample: Plane of Fire, 2026-10-23, ~26k lines)
@@ -64,7 +64,9 @@ injection, no memory reads, nothing written near the game folder.
 - [x] Morituri look: default colour scheme from project-morituri.com's palette, bundled
       Cinzel / Archivo / JetBrains Mono, bronze-and-oxblood emblem and icon. The
       server's shield logo is NOT used. Ask the Morituri admins before adding it.
-- [ ] Hide Triune-only pages (Leaderboards, Progression, Server). PTDex lookups are already off by default
+- [x] Hide Triune-only pages: Leaderboards and Progression (PTDex), plus Overview's flag panel and the
+      party refresh button when no PTDex address is set. Server stays: it is built from log broadcasts,
+      not PTDex
 - [ ] Update outdated Electron / electron-builder (npm audit: 28 issues)
 - [x] Windows installer build: GitHub Actions (`.github/workflows/windows-installer.yml`)
 

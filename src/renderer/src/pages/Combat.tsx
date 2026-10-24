@@ -224,6 +224,7 @@ export function Combat({
             known={roster.known}
             order={characters}
             busy={roster.busy}
+            lookups={roster.lookups}
             offline={offline}
           />
           <div className="pbody">

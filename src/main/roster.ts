@@ -152,7 +152,8 @@ export class Roster {
     return {
       known: Object.fromEntries(this.known),
       groups: this.groups,
-      busy: this.queue.length > 0 || this.working
+      busy: this.queue.length > 0 || this.working,
+      lookups: !!this.opts.base()
     }
   }
 

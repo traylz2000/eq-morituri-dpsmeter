@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { isLive, type CombatState, type LogSource, type WatcherStatus } from '@shared/ipc'
 import { sessionWindow, summarizeCharacter, type LevelingData } from '@shared/leveling'
 import { formatCoin, summarizeLoot, toPlatinum, type LootData } from '@shared/loot'
-import type { ProgressSummary } from '@shared/progression'
 import { EMPTY_ROSTER, partyOf, type RosterState } from '@shared/roster'
 import { clock } from '@shared/stats'
 import { summarizeZones, type ZonesData } from '@shared/zones'
@@ -36,7 +35,7 @@ export function Overview({
   /** The character the title bar is on - the one whose group the headline names. */
   active: string | null
   onGoToPreferences: () => void
-  onNavigate: (page: 'combat' | 'loot' | 'zones' | 'leveling' | 'progression') => void
+  onNavigate: (page: 'combat' | 'loot' | 'zones' | 'leveling') => void
 }): JSX.Element {
   const sources = status?.sources ?? []
   const connected = sources.length > 0
@@ -46,23 +45,20 @@ export function Overview({
   const [loot, setLoot] = useState<LootData>({ coin: [], discoveries: [] })
   const [zones, setZones] = useState<ZonesData>({ visits: [] })
   const [roster, setRoster] = useState<RosterState>(EMPTY_ROSTER)
-  const [flags, setFlags] = useState<ProgressSummary | null>(null)
 
   const load = useCallback(async () => {
-    const [c, l, lo, z, r, p] = await Promise.all([
+    const [c, l, lo, z, r] = await Promise.all([
       window.triune.invoke('combat:get'),
       window.triune.invoke('leveling:get'),
       window.triune.invoke('loot:get'),
       window.triune.invoke('zones:get'),
-      window.triune.invoke('roster:get'),
-      window.triune.invoke('progress:get')
+      window.triune.invoke('roster:get')
     ])
     setCombat(c)
     setLeveling(l)
     setLoot(lo)
     setZones(z)
     setRoster(r)
-    setFlags(p.summary)
   }, [])
 
   useEffect(() => {
@@ -240,55 +236,31 @@ export function Overview({
         />
       </div>
 
-      <div className="ov-cols">
-        <section className="panel">
-          <div className="phead">
-            <span className="t">Your characters</span>
-            <span className="meta">
-              {playing.length > 0 && quiet.length > 0
-                ? `${playing.length} playing · ${quiet.length} quiet`
-                : `${sources.length} log${sources.length === 1 ? '' : 's'} tailed`}
-            </span>
-          </div>
-          <div className="pbody">
-            <div className="ovchars">
-              {playing.map(charRow)}
+      <section className="panel">
+        <div className="phead">
+          <span className="t">Your characters</span>
+          <span className="meta">
+            {playing.length > 0 && quiet.length > 0
+              ? `${playing.length} playing · ${quiet.length} quiet`
+              : `${sources.length} log${sources.length === 1 ? '' : 's'} tailed`}
+          </span>
+        </div>
+        <div className="pbody">
+          <div className="ovchars">
+            {playing.map(charRow)}
 
-              {/* Only split the list when there is something to split it FROM.
-                  A heading over the whole list says nothing; a heading that
-                  appears the moment one of three boxes logs out is the point -
-                  the character who stopped being played stops sitting in the
-                  same block as the ones who are. */}
-              {quiet.length > 0 && playing.length > 0 && (
-                <div className="ovchars-sep">not playing</div>
-              )}
-              {quiet.map(charRow)}
-            </div>
-          </div>
-        </section>
-
-        <section className="panel">
-          <div className="phead">
-            <span className="t">Flagging</span>
-            <span className="meta">account-wide</span>
-          </div>
-          <div className="pbody">
-            {flags && flags.total > 0 ? (
-              <button className="ovflags" type="button" onClick={() => onNavigate('progression')}>
-                <span className="of-pct num">{Math.round((flags.earned / flags.total) * 100)}%</span>
-                <span className="of-bar">
-                  <i style={{ width: `${(flags.earned / flags.total) * 100}%` }} />
-                </span>
-                <span className="of-sub">
-                  {flags.earned} of {flags.total} steps · {flags.total - flags.earned} to go
-                </span>
-              </button>
-            ) : (
-              <div className="empty">Sync from PTDex on the Progression page to fill this in.</div>
+            {/* Only split the list when there is something to split it FROM.
+                A heading over the whole list says nothing; a heading that
+                appears the moment one of three boxes logs out is the point -
+                the character who stopped being played stops sitting in the
+                same block as the ones who are. */}
+            {quiet.length > 0 && playing.length > 0 && (
+              <div className="ovchars-sep">not playing</div>
             )}
+            {quiet.map(charRow)}
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </div>
   )
 }

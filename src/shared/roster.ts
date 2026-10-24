@@ -171,9 +171,11 @@ export interface RosterState {
   groups: Record<string, string[]>
   /** True while at least one lookup is in flight, so the UI can say so. */
   busy: boolean
+  /** False when no PTDex address is set, so lookups can never happen. */
+  lookups: boolean
 }
 
-export const EMPTY_ROSTER: RosterState = { known: {}, groups: {}, busy: false }
+export const EMPTY_ROSTER: RosterState = { known: {}, groups: {}, busy: false, lookups: false }
 
 /** `War/Rng/Brd`, or null when we have nothing to show. */
 export function classLine(id: Identity | undefined | null): string | null {

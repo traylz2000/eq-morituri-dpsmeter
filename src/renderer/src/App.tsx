@@ -13,8 +13,6 @@ import { Zones } from './pages/Zones'
 import { Mobs } from './pages/Mobs'
 import { Overview } from './pages/Overview'
 import { Preferences } from './pages/Preferences'
-import { Leaderboards } from './pages/Leaderboards'
-import { Progression } from './pages/Progression'
 import { Timers } from './pages/Timers'
 import { Server, type ServerView } from './pages/Server'
 import { installTimers } from './timers/store'
@@ -119,8 +117,6 @@ export default function App(): JSX.Element {
             onView={(v) => void update({ combatView: v })}
           />
         )}
-        {page === 'progression' && <Progression />}
-        {page === 'leaderboards' && <Leaderboards />}
         {page === 'alerts' && <Alerts />}
         {page === 'leveling' && <Leveling characters={characters} />}
         {page === 'loot' && <Loot />}

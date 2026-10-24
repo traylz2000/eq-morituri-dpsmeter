@@ -246,6 +246,7 @@ describe('partyOf', () => {
   const state = (groups: Record<string, string[]>): Parameters<typeof partyOf>[0] => ({
     known: {},
     busy: false,
+    lookups: false,
     groups
   })
 

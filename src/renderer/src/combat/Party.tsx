@@ -45,6 +45,7 @@ export function Party({
   known,
   order,
   busy,
+  lookups,
   offline
 }: {
   party: PartyView
@@ -52,6 +53,8 @@ export function Party({
   /** Your own boxed characters, in their stable order - they get slot colours. */
   order: string[]
   busy: boolean
+  /** Whether a PTDex address is set. Without one the refresh button does nothing. */
+  lookups: boolean
   /**
    * Boxed characters the game has stopped writing for.
    *
@@ -108,20 +111,22 @@ export function Party({
         {members.length > 1 && <span className="n num">{members.length}</span>}
         <span className="spacer" />
         {(busy || refreshing) && <span className="party-busy">looking up…</span>}
-        <button
-          className="party-sync"
-          type="button"
-          title="Re-read levels and classes from PTDex"
-          disabled={busy || refreshing}
-          onClick={() => {
-            setRefreshing(true)
-            void window.triune
-              .invoke('roster:refresh', { names: [...members, ...alsoOnline] })
-              .finally(() => setRefreshing(false))
-          }}
-        >
-          ⟳
-        </button>
+        {lookups && (
+          <button
+            className="party-sync"
+            type="button"
+            title="Re-read levels and classes from PTDex"
+            disabled={busy || refreshing}
+            onClick={() => {
+              setRefreshing(true)
+              void window.triune
+                .invoke('roster:refresh', { names: [...members, ...alsoOnline] })
+                .finally(() => setRefreshing(false))
+            }}
+          >
+            ⟳
+          </button>
+        )}
       </div>
 
       <div className="party-rows">
