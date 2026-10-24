@@ -38,7 +38,6 @@
   z-index: 100;
   border-bottom: var(--line-w) solid var(--line);
   background: linear-gradient(180deg, rgba(10, 12, 20, 0.97), rgba(10, 12, 20, 0.88));
-  -webkit-app-region: drag;
 }
 /* Buttons and inputs must stay clickable inside a drag region. */
 .titlebar button,
@@ -47,6 +46,22 @@
 
 .titlebar > * { position: relative; z-index: 1; }
 .titlebar > .aurora { z-index: 0; opacity: 0.3; }
+
+/* The window's drag handle: an empty layer exactly the size of the title bar.
+
+   The drag region used to be the .titlebar element itself, which made every
+   descendant part of it - including the aurora's drifting blobs, which reach
+   hundreds of pixels below the bar. Chromium in Electron 44 counts that
+   overflow as draggable even though it is clipped from view, and Windows then
+   treats a click there as "move the window". Every sidebar item above Timers
+   stopped responding. An empty layer has no descendants to overflow, so the
+   handle is the title bar and nothing else. */
+.titlebar > .titlebar-drag {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  -webkit-app-region: drag;
+}
 
 /* A thin gold filament along the bottom edge, brightest under the brand. */
 .titlebar::after {

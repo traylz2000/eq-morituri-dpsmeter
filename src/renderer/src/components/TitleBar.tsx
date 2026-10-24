@@ -106,6 +106,7 @@ export function TitleBar({
   return (
     <header className="titlebar">
       <Aurora />
+      <div className="titlebar-drag" aria-hidden="true" />
 
       <div className="brand">
         <Crest size={32} />
