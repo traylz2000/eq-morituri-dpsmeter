@@ -67,7 +67,8 @@ injection, no memory reads, nothing written near the game folder.
 - [x] Hide Triune-only pages: Leaderboards and Progression (PTDex), plus Overview's flag panel and the
       party refresh button when no PTDex address is set. Server stays: it is built from log broadcasts,
       not PTDex
-- [ ] Update outdated Electron / electron-builder (npm audit: 28 issues)
+- [x] Update Electron 33 → 44, electron-builder 25 → 26, Vite 5 → 7, Vitest 2 → 4 (npm audit: 0 issues).
+      Electron 45 skipped: it was 3 days old. React 19, TypeScript 7 and electron-store 12 left for later (no advisories)
 - [x] Windows installer build: GitHub Actions (`.github/workflows/windows-installer.yml`)
 
 ## Releasing
