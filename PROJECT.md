@@ -47,7 +47,7 @@ injection, no memory reads, nothing written near the game folder.
   is still credited by the "most recent caster" heuristic, which is wrong for
   shields — follow-up item below.
 - Example group in the sample: Teguus (log owner, caster), companions Rustik,
-  Lurdrim, Twilightscar; Kimchi is another player (a bard).
+  Lurdrim, Twilightscar; the group also had another player, a bard, who is not a pet.
 
 ## Plan
 
