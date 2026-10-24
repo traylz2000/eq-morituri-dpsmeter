@@ -1,7 +1,7 @@
 import { useId } from 'react'
 
 /**
- * The app mark: a meter dial in weathered gold, needle into the red.
+ * The app mark: a meter dial in Morituri bronze, needle into the oxblood.
  *
  * Replaces the Project Triune emblem this fork inherited - that mark belongs
  * to another server and has no business on a Morituri tool. The geometry is
@@ -29,8 +29,8 @@ const TICKS = [
   { x1: 147.3, y1: 72.7, x2: 153.2, y2: 69.3, major: false }
 ]
 
-const GOLD = '#d8b45a'
-const EMBER = '#f0621f'
+const GOLD = '#c9a468'
+const EMBER = '#b8323a'
 
 export function Crest({ size = 44, spin = true }: { size?: number; spin?: boolean }): JSX.Element {
   // Gradient ids must be unique per instance: the title bar and the hero both
@@ -50,14 +50,14 @@ export function Crest({ size = 44, spin = true }: { size?: number; spin?: boolea
     >
       <defs>
         <radialGradient id={halo}>
-          <stop offset=".52" stopColor="#8a6a2a" stopOpacity="0" />
+          <stop offset=".52" stopColor="#4a1013" stopOpacity="0" />
           <stop offset=".72" stopColor={GOLD} stopOpacity=".2" />
           <stop offset="1" stopColor={GOLD} stopOpacity="0" />
         </radialGradient>
       </defs>
 
       <circle className="pt-h3" cx="100" cy="100" r="96.1" fill={`url(#${halo})`} />
-      <circle cx="100" cy="100" r="61.4" fill="#0d0b08" fillOpacity=".86" />
+      <circle cx="100" cy="100" r="61.4" fill="#12100f" fillOpacity=".86" />
 
       <g className="pt-out" stroke={GOLD} strokeLinecap="round">
         {TICKS.map((t, i) => (

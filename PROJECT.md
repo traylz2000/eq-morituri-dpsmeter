@@ -61,6 +61,9 @@ injection, no memory reads, nothing written near the game folder.
 - [x] Rebrand: "Morituri DPS Meter" name, appId, window titles, installer, README, new icon
       (the inherited Project Triune emblem was replaced)
 - [x] Updater points at this repo (it has no releases yet, so a check reports that)
+- [x] Morituri look: default colour scheme from project-morituri.com's palette, bundled
+      Cinzel / Archivo / JetBrains Mono, bronze-and-oxblood emblem and icon. The
+      server's shield logo is NOT used. Ask the Morituri admins before adding it.
 - [ ] Hide Triune-only pages (Leaderboards, Progression, Server). PTDex lookups are already off by default
 - [ ] Update outdated Electron / electron-builder (npm audit: 28 issues)
 - [ ] Windows installer build (local cross-build or GitHub Actions)

@@ -1,9 +1,13 @@
 /* ============================================================
-   Triune-Helper - "Voidforge, gilded"
+   Morituri DPS Meter - "Morituri", bronze on void
 
-   Two lineages meet here. The tokens are lifted verbatim from the website's
-   nms.css (weathered gold + arcane blue + ember on deep slate) so the app and
-   PTDex read as one product. The attitude is KissTriune's theme.lua: a near
+   The default palette and type follow project-morituri.com: bronze, oxblood
+   and bone on a near-black plate, Cinzel for headings, Archivo for text and
+   JetBrains Mono for numbers. Colours are matched, not copied artwork - the
+   server's shield is its own brand mark and is not used here. The fonts are
+   OFL and bundled (see renderer/src/fonts.ts), so nothing loads at runtime.
+
+   The rest of this sheet comes from Triune-Helper. Its attitude is KissTriune's theme.lua: a near
    black void ground, an aurora band across the header, a sigil that actually
    turns, hairline rules with diamond caps, and glow reserved for things that
    are genuinely live.
@@ -20,23 +24,21 @@
    ============================================================ */
 
 :root {
-  /* ---- PTDex brand tokens (nms.css:7-48, unchanged) ---- */
-  --ink: #0f1319; --ink-2: #0b0e13;
-  --surface: #171c24; --surface-2: #1e242e; --surface-3: #252c38;
-  --line: #2b3441; --line-2: #3a4552;
-  --gold: #ff8a4a; --gold-hi: #ffb289; --gold-deep: #b35422;
-  --arcane: #5aa0e0; --arcane-hi: #86c2ff;
-  --ember: #d9633a;
-  --text: #ece5d6; --text-2: #b3b0a4; --muted: #8a8f98;
+  /* ---- Morituri: the site's tokens (--m-void, --m-plate, --m-bronze,
+     --m-oxblood, --m-verdigris, --m-bone), with surfaces stepped up from its
+     plate so panels separate from the ground ---- */
+  --void: #08070a; --abyss: #0b0a0c;
+  --ink: #0d0b0c; --ink-2: #0b0a0c;
+  --surface: #15120f; --surface-2: #1b1714; --surface-3: #231e1a;
+  --line: #2a2420; --line-2: #3d342c;
+  --gold: #c9a468; --gold-hi: #e2c48e; --gold-deep: #8d7343;
+  --arcane: #4e8375; --arcane-hi: #7fb3a5;
+  --ember: #a8323a;
+  --text: #e8e2d6; --text-2: #bdb6a8; --muted: #807a6e;
 
-  /* ---- Voidforge depth: a ground darker than the site's, so the gold reads
-     as forged metal rather than as a web accent ---- */
-  --void: #06070c;
-  --abyss: #0a0c14;
-
-  --nms-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --nms-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
-  --nms-mono: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+  --nms-sans: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --nms-serif: "Cinzel", Georgia, "Times New Roman", serif;
+  --nms-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
 
   /* 4px-based spacing scale, in rem so it tracks the reader's font size */
   --s-1: 0.25rem; --s-2: 0.5rem;  --s-3: 0.75rem; --s-4: 1rem;
@@ -68,10 +70,10 @@
   /* Ambient layers. Tokens rather than literals so a scheme can retune the
      atmosphere - these three blurred blobs are the largest coloured area in
      the app, and a scheme that left them behind would only be half applied. */
-  --aurora-1: #1f6dd0;
-  --aurora-2: #7b53d6;
-  --aurora-3: #b35422;
-  --star: #8fd0ff;
+  --aurora-1: #6b1519;
+  --aurora-2: #4a1013;
+  --aurora-3: #8d7343;
+  --star: #c9a468;
 
   --shadow-panel: 0 10px 30px rgba(0, 0, 0, 0.45);
   --shadow-lift: 0 18px 44px rgba(0, 0, 0, 0.55), 0 0 0 1px color-mix(in srgb, var(--arcane) 14%, transparent);
@@ -94,7 +96,7 @@
      - chart series colours (charts.css) were validated against the panel
        surface. They are data, and the rule here is that chrome may shimmer
        while data may not.
-     - the Project Triune crest, which is a brand mark rather than an accent.
+     - the app emblem, which is a mark rather than an accent.
 
    So every accent below is chosen to sit clear of mint-green, red and amber -
    the three status hues - rather than merely to look nice next to them.
@@ -103,6 +105,24 @@
    validated against a dark surface, and a light ground would need both
    regenerated rather than merely inverted.
    ============================================================ */
+
+/* Triune-Helper's original look: orange-gold on deep slate, arcane blue
+   secondary, and its own system fonts. */
+:root[data-theme='voidforge'] {
+  --void: #06070c; --abyss: #0a0c14;
+  --ink: #0f1319; --ink-2: #0b0e13;
+  --surface: #171c24; --surface-2: #1e242e; --surface-3: #252c38;
+  --line: #2b3441; --line-2: #3a4552;
+  --gold: #ff8a4a; --gold-hi: #ffb289; --gold-deep: #b35422;
+  --arcane: #5aa0e0; --arcane-hi: #86c2ff;
+  --ember: #d9633a;
+  --text: #ece5d6; --text-2: #b3b0a4; --muted: #8a8f98;
+  --aurora-1: #1f6dd0; --aurora-2: #7b53d6; --aurora-3: #b35422;
+  --star: #8fd0ff;
+  --nms-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --nms-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --nms-mono: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+}
 
 /* Indigo ground, periwinkle accent, cyan secondary. */
 :root[data-theme='nightfall'] {

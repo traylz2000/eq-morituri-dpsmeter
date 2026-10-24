@@ -21,9 +21,15 @@ export interface ThemeDef {
 
 export const THEMES: ThemeDef[] = [
   {
+    id: 'morituri',
+    name: 'Morituri',
+    note: 'Bronze and oxblood on near-black, like the Project Morituri site.',
+    swatch: ['#0b0a0c', '#c9a468', '#4e8375']
+  },
+  {
     id: 'voidforge',
     name: 'Voidforge',
-    note: 'Near-black ground, weathered gold.',
+    note: 'Slate ground, orange-gold accent. The original Triune-Helper look.',
     swatch: ['#0a0c14', '#ff8a4a', '#5aa0e0']
   },
   {
@@ -52,7 +58,7 @@ export const THEMES: ThemeDef[] = [
   }
 ]
 
-export const DEFAULT_THEME = 'voidforge'
+export const DEFAULT_THEME = 'morituri'
 
 export function isTheme(id: string): boolean {
   return THEMES.some((t) => t.id === id)
@@ -62,7 +68,7 @@ export function isTheme(id: string): boolean {
  * Put a scheme on the document.
  *
  * The default is written as an absent attribute rather than as
- * `data-theme="voidforge"`, because its values ARE the `:root` block - a
+ * `data-theme="morituri"`, because its values ARE the `:root` block - a
  * scheme selector that restates the defaults is a second copy to keep in step.
  *
  * The element is typed structurally rather than as an HTMLElement: this module

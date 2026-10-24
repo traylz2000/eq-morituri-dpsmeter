@@ -32,18 +32,18 @@ mkdirSync(dirname(out), { recursive: true })
 const SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="1024" height="1024">
   <defs>
     <radialGradient id="plate" cx="50%" cy="38%" r="72%">
-      <stop offset="0" stop-color="#231d14"/><stop offset="1" stop-color="#0a0806"/>
+      <stop offset="0" stop-color="#1c1513"/><stop offset="1" stop-color="#08070a"/>
     </radialGradient>
-    <radialGradient id="halo"><stop offset=".52" stop-color="#8a6a2a" stop-opacity="0"/>
-      <stop offset=".72" stop-color="#d8b45a" stop-opacity=".28"/>
-      <stop offset="1" stop-color="#d8b45a" stop-opacity="0"/></radialGradient>
+    <radialGradient id="halo"><stop offset=".52" stop-color="#4a1013" stop-opacity="0"/>
+      <stop offset=".72" stop-color="#c9a468" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#c9a468" stop-opacity="0"/></radialGradient>
   </defs>
 
   <rect x="4" y="4" width="192" height="192" rx="42" fill="url(#plate)"/>
   <circle cx="100" cy="100" r="92" fill="url(#halo)"/>
-  <circle cx="100" cy="100" r="61.4" fill="#0d0b08" fill-opacity=".9"/>
+  <circle cx="100" cy="100" r="61.4" fill="#12100f" fill-opacity=".9"/>
 
-  <g stroke="#d8b45a" stroke-linecap="round">
+  <g stroke="#c9a468" stroke-linecap="round">
     ${[
       [149.6, 100.0, 161.4, 100.0, 1],
       [147.3, 127.3, 153.2, 130.7, 0],
@@ -65,15 +65,15 @@ const SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width
       .join('\n    ')}
   </g>
 
-  <circle cx="100" cy="100" r="61.4" fill="none" stroke="#d8b45a" stroke-opacity=".9" stroke-width="2.2"/>
+  <circle cx="100" cy="100" r="61.4" fill="none" stroke="#c9a468" stroke-opacity=".9" stroke-width="2.2"/>
 
-  <path d="M73.13 126.87 A38 38 0 1 1 126.87 126.87" fill="none" stroke="#d8b45a" stroke-opacity=".55"
+  <path d="M73.13 126.87 A38 38 0 1 1 126.87 126.87" fill="none" stroke="#c9a468" stroke-opacity=".55"
         stroke-width="6" stroke-linecap="round"/>
-  <path d="M126.87 73.13 A38 38 0 0 1 126.87 126.87" fill="none" stroke="#f0621f" stroke-width="6"
+  <path d="M126.87 73.13 A38 38 0 0 1 126.87 126.87" fill="none" stroke="#b8323a" stroke-width="6"
         stroke-linecap="round"/>
 
-  <line x1="96" y1="106.93" x2="117" y2="70.56" stroke="#f0621f" stroke-width="4.2" stroke-linecap="round"/>
-  <circle cx="100" cy="100" r="7.5" fill="#d8b45a"/>
+  <line x1="96" y1="106.93" x2="117" y2="70.56" stroke="#b8323a" stroke-width="4.2" stroke-linecap="round"/>
+  <circle cx="100" cy="100" r="7.5" fill="#c9a468"/>
   <circle cx="98" cy="98" r="2.6" fill="#fff" fill-opacity=".8"/>
 </svg>`
 

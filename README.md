@@ -102,5 +102,11 @@ MIT. See [LICENSE](LICENSE). This project is built on
 copyright notice (Project Triune) is kept as the licence requires. The bundled data has its own
 provenance, set out in [data/README.md](data/README.md).
 
+The default **Morituri** colour scheme matches the palette of
+[project-morituri.com](https://project-morituri.com/). The app's emblem is its
+own and does not use the server's shield. The bundled typefaces, Cinzel,
+Archivo and JetBrains Mono, are under the SIL Open Font License and are shipped
+through the `@fontsource` packages.
+
 EverQuest is a trademark of Daybreak Game Company LLC. This project is not
 affiliated with or endorsed by them, or by Project Morituri.

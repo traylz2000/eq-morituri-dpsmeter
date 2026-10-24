@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import './fonts'
 import '@shared/theme/theme.css'
 import './styles/app.css'
 import './styles/charts.css'

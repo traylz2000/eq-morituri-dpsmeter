@@ -19,6 +19,9 @@
     "release": "npm run package && npm run bundle"
   },
   "dependencies": {
+    "@fontsource/archivo": "^5.3.0",
+    "@fontsource/cinzel": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
     "electron-store": "^8.2.0",
     "electron-updater": "^6.8.9",
     "node-html-parser": "^7.0.1"
