@@ -43,9 +43,9 @@ injection, no memory reads, nothing written near the game folder.
   "Attacking X Master." / "Taunting attacker, Master." lines and the
   `Name (Owner: X) hit …` tag on their spell damage. Without those rules,
   ~213k of 3 minutes' companion damage was counted as mob-on-mob.
-- ~15k of that sample is untargeted "was hit by non-melee" (damage shields) and
-  is still credited by the "most recent caster" heuristic, which is wrong for
-  shields — follow-up item below.
+- ~15k of that sample is untargeted "was hit by non-melee" (damage shields).
+  Each one is followed within three lines by the mob's swing at the shield's
+  owner, which is how they are now credited.
 - Example group in the sample: Teguus (log owner, caster), companions Rustik,
   Lurdrim, Twilightscar; the group also had another player, a bard, who is not a pet.
 
@@ -56,8 +56,8 @@ injection, no memory reads, nothing written near the game folder.
 - [x] Attribute companion damage to the owning player (auto-detected from log lines)
 - [x] Preferences › Pets & companions: name pets by hand (typed or picked from
       detected names) and choose the owner; overrides the log
-- [ ] Credit damage-shield hits ("was hit by non-melee" + "X was burned") to the
-      shield's owner instead of the most recent caster
+- [x] Credit damage-shield hits ("was hit by non-melee" + "X was burned") to the
+      shield's owner (the target of the mob's next swing) instead of the most recent caster
 - [x] Rebrand: "Morituri DPS Meter" name, appId, window titles, installer, README, new icon
       (the inherited Project Triune emblem was replaced)
 - [x] Updater points at this repo (it has no releases yet, so a check reports that)
